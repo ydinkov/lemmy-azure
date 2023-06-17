@@ -1,0 +1,65 @@
+version: "3.3"
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "50m"
+    max-file: 4
+networks:
+  lemmyexternalproxy:
+  lemmyinternal:
+    driver: bridge
+    internal: true
+services:
+  proxy:
+    image: nginx:1-alpine
+    networks:
+      - lemmyinternal
+      - lemmyexternalproxy
+    ports:
+      - "1236:1236"
+      - "8536:8536"
+      - "5432:5432"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro,Z
+    restart: always
+    depends_on:
+      - pictrs
+      - lemmy-ui
+    logging: *default-logging
+
+  lemmy:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      # args:
+      #   RUST_RELEASE_MODE: release
+    # this hostname is used in nginx reverse proxy and also for lemmy ui to connect to the backend, do not change
+    hostname: lemmy
+    networks:
+      - lemmyinternal
+      - lemmyexternalproxy
+    restart: always
+    environment:
+      - RUST_LOG="warn,lemmy_server=debug,lemmy_api=debug,lemmy_api_common=debug,lemmy_api_crud=debug,lemmy_apub=debug,lemmy_db_schema=debug,lemmy_db_views=debug,lemmy_db_views_actor=debug,lemmy_db_views_moderator=debug,lemmy_routes=debug,lemmy_utils=debug,lemmy_websocket=debug"
+      - RUST_BACKTRACE=full
+    volumes:
+      - ./lemmy.hjson:/config/config.hjson:Z
+    depends_on:
+      - postgres
+      - pictrs
+    logging: *default-logging
+  lemmy-ui:
+    image: dessalines/lemmy-ui:0.17.1
+    networks:
+      - lemmyinternal
+    environment:
+      - LEMMY_UI_LEMMY_INTERNAL_HOST=lemmy:8536
+      - LEMMY_UI_LEMMY_EXTERNAL_HOST=localhost:1236
+      - LEMMY_HTTPS=false
+      - LEMMY_UI_DEBUG=true
+    depends_on:
+      - lemmy
+    restart: always
+    logging: *default-logging
+
+  

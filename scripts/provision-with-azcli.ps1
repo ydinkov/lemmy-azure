@@ -2,9 +2,16 @@
 
 # Create a file share
 az storage share create `
-  --name $shareName `
+  --name $configShareName `
   --account-name $storageAccountName `
-  --account-key $storageAccountKey
+  --account-key $storageAccountKey `
+  --output none
+
+az storage container create `
+  --name $imageContainerName `
+  --account-name $storageAccountName `
+  --account-key $storageAccountKey `
+  --output none
 
 # Get the storage account key
 $storageAccountKey = az storage account keys list `
@@ -22,7 +29,9 @@ az postgres flexible-server create `
     --admin-user $dbUsername `
     --admin-password $dbPassword `
     --sku-name $dbComputeSKU `
-    --storage-size $dbStorageSize
+    --storage-size $dbStorageSize `
+    -y `
+    --output none
 
 # Prepare connection string
 $dbConnectionString = "postgres://${dbUsername}:$dbPassword@${dbHost}:$dbPort/$dbName"
@@ -33,7 +42,8 @@ az webapp create `
     --resource-group $resourceGroup `
     --plan $appServicePlan `
     --name $apiAppName `
-    --deployment-container-image-name $lemmyImage
+    --deployment-container-image-name $lemmyImage `
+    --output none
 
 az webapp config appsettings set `
     --resource-group $resourceGroup `
@@ -43,6 +53,19 @@ az webapp config appsettings set `
     --azure-file-volume-account-key $storageAccountKey `
     --azure-file-volume-share-name $shareName2 `
     --azure-file-volume-mount-path /config
+
+
+az webapp config storage-account add `
+    --resource-group $resourceGroup `
+    --name $apiAppName `
+    #--custom-id CustomId `
+    --storage-type AzureFiles `
+    --share-name $shareName `
+    --account-name $storageAccountName `
+    --access-key $storageAccountKey `
+    --mount-path $mountPath
+
+
 
 # Get Lemmy's URL
 $lemmyUrl = az webapp show `

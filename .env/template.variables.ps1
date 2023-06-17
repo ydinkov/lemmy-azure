@@ -8,7 +8,8 @@ $aspSku = "<ASP SIZE>"
 
 #StorageAcount
 $storageAccountName = "STORAGE ACCOUNT NAME"
-$shareName = "lemmy"
+$configShareName = "lemmyConfig"
+$imageBlobName = "lemmyImages"
 $storageSku = "Standard_LRS"
 
 #API
