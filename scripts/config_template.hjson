@@ -2,11 +2,11 @@
   # settings related to the postgresql database
   database: {
     # Username to connect to postgres
-    user: "lemmy"
+    user: "<LEMMY_DATABASE_USER>"
     # Password to connect to postgres
-    password: "password"
+    password: "<LEMMY_DATABASE_PASSWORD>"
     # Host where postgres is running
-    host: "localhost"
+    host: "<LEMMY_DATABASE_HOST>"
     # Port where postgres can be accessed
     port: 5432
     # Name of the postgres database for lemmy
@@ -18,9 +18,9 @@
   # Pictrs image server configuration.
   pictrs: {
     # Address where pictrs is available (for image hosting)
-    url: "http://localhost:8080/"
+    url: "<LEMMY_PICTRS_URL>"
     # Set a custom pictrs API key. ( Required for deleting images )
-    api_key: "string"
+    api_key: "<LEMMY_PICTRS_API_KEY>"
   }
   # Email sending configuration. All options except login/password are mandatory
   email: {
@@ -38,16 +38,16 @@
   # Parameters for automatic configuration of new instance (only used at first start)
   setup: {
     # Username for the admin user
-    admin_username: "admin"
+    admin_username: "<LEMMY_API_ADMIN_USERNAME>"
     # Password for the admin user. It must be at least 10 characters.
-    admin_password: "tf6HHDS4RolWfFhk4Rq9"
+    admin_password: "<LEMMY_API_ADMIN_PASSWORD>"
     # Name of the site (can be  later)
-    site_name: "My Lemmy Ichangednstance"
+    site_name: "<LEMMY_SITE_NAME>"
     # Email for the admin user (optional, can be omitted and set later through the website)
-    admin_email: "user@example.com"
+    admin_email: "<LEMMY_API_ADMIN_EMAIL>"
   }
   # the domain name of your instance (mandatory)
-  hostname: "unset"
+  hostname: "<LEMMY_HOSTNAME>"
   # Address where lemmy should listen for incoming requests
   bind: "0.0.0.0"
   # Port where lemmy should listen for incoming requests

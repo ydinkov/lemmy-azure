@@ -1,5 +1,5 @@
 #Global Variables
-$resourceGroup = "<RESOURCE GROUP"
+$resourceGroup = "<RESOURCE GROUP>"
 $localtion = "<LOCATION>"
 
 #ASP
@@ -8,7 +8,8 @@ $aspSku = "<ASP SIZE>"
 
 #StorageAcount
 $storageAccountName = "STORAGE ACCOUNT NAME"
-$configShareName = "lemmyConfig"
+$shareNameNginx = "nginx"
+$shareNameLemmy = "lemmy"
 $imageBlobName = "lemmyImages"
 $storageSku = "Standard_LRS"
 

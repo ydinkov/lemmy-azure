@@ -28,9 +28,7 @@ services:
     logging: *default-logging
 
   lemmy:
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile
+    image: dessalines/lemmy:latest
       # args:
       #   RUST_RELEASE_MODE: release
     # this hostname is used in nginx reverse proxy and also for lemmy ui to connect to the backend, do not change
@@ -49,7 +47,7 @@ services:
       - pictrs
     logging: *default-logging
   lemmy-ui:
-    image: dessalines/lemmy-ui:0.17.1
+    image: dessalines/lemmy-ui:latest
     networks:
       - lemmyinternal
     environment:
