@@ -10,7 +10,7 @@
     # Port where postgres can be accessed
     port: 5432
     # Name of the postgres database for lemmy
-    database: "lemmy"
+    database: "<LEMMY_DATABASE_NAME>"
     # Maximum number of active sql connections
     pool_size: 5
   }

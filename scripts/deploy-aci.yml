@@ -1,0 +1,80 @@
+apiVersion: '2019-12-01'
+location: WestEurope
+name: lemmy-mcaci-4
+type: Microsoft.ContainerInstance/containerGroups
+properties:
+  osType: Linux
+  restartPolicy: Always
+  containers:
+  
+  - name: lemmy
+    properties:
+      image: dessalines/lemmy:0.17.4
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGb: 3.0
+      environmentVariables:
+        - name: RUST_LOG
+          value: error
+        - name: RUST_BACKTRACE
+          value: full
+      volumeMounts:        
+        - mountPath: /config/config.hjson
+          name: lemmy-config
+  - name: lemmy-ui
+    properties:
+      image: dessalines/lemmy-ui:latest
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGb: 3.0
+      environmentVariables:
+        - name: LEMMY_UI_LEMMY_INTERNAL_HOST
+          value: "lemmy:8536"
+        - name: LEMMY_UI_LEMMY_EXTERNAL_HOST
+          value: "localhost:1236"
+        - name: LEMMY_HTTPS
+          value: "false"
+        - name: LEMMY_UI_DEBUG
+          value: "true"
+  - name: proxy
+    properties:
+      image: nginx:1-alpine
+      ports:
+        - protocol: tcp
+          port: 1236
+        - protocol: tcp
+          port: 8536
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGb: 3.0
+      volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-config
+  volumes:
+      - name: lemmy-config
+        azureFile:
+          sharename: lemmy
+          storageAccountName: lemmysa
+          storageAccountKey: "7o6BWAY3VqfTXj5m3zkUepi80IsMlymetU/fqXSTVAX4RSLr56xLUhrJ84Bp1rCX0BGFUawsaxAd+AStNv8uJQ=="
+      - name: nginx-config
+        azureFile:
+          sharename: nginx
+          storageAccountName: lemmysa
+          storageAccountKey: ""
+  diagnostics:
+    logAnalytics:
+        workspaceId: 31c8e9a7-07d6-47e6-af5d-61e19e26b54c
+        workspaceKey: KzSvxWUKTWiSIfTSOAz+uK2L8wjbbPpkOOQpJrGSOZyi2uhqtAbaJ6pQobC3owl3SoNf3wxRXHOc3I/v0kYVyw==    
+  ipAddress:
+    ports:
+      - protocol: tcp
+        port: 1236
+      - protocol: tcp
+        port: 8536
+    type: Public
+
+
+ 
